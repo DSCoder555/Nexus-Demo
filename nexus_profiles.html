@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus - Browse Profiles</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Navigation styles */
+        .navbar {
+            background: #ffffff;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-bottom: 2px solid #e0e0e0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            margin-bottom: 20px;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #dc2626;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #1a1a1a;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: #f5f5f5;
+            color: #dc2626;
+        }
+
+        .nav-link.active {
+            background: #dc2626;
+            color: white;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #1a1a1a;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: #ffffff;
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                border-top: 1px solid #e0e0e0;
+            }
+
+            .nav-links.mobile-open {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-container {
+                position: relative;
+            }
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+            color: #1a1a1a;
+        }
+
+        .header {
+            max-width: 1200px;
+            margin: 0 auto 30px auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-content h1 {
+            font-size: 2rem;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+
+        .header-content p {
+            color: #666666;
+            font-size: 1rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 12px 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            color: #1a1a1a;
+            border: 2px solid #1a1a1a;
+            background: transparent;
+        }
+
+        .nav-btn:hover {
+            background: #1a1a1a;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .search-filters {
+            max-width: 1200px;
+            margin: 0 auto 30px auto;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid #e0e0e0;
+        }
+
+        .search-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 15px;
+            align-items: end;
+        }
+
+        .search-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .search-group label {
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #1a1a1a;
+            font-size: 0.9rem;
+        }
+
+        .search-group input, .search-group select {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-group input:focus, .search-group select:focus {
+            outline: none;
+            border-color: #dc2626;
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+        }
+
+        .search-btn {
+            padding: 12px 25px;
+            background: linear-gradient(45deg, #dc2626, #b91c1c);
+            color: #1a1a1a;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            height: fit-content;
+        }
+
+        .search-btn:hover {
+            background: linear-gradient(45deg, #b91c1c, #991b1b);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .profiles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .profile-card {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-avatar {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(45deg, #dc2626, #b91c1c);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin-right: 15px;
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+        }
+
+        .profile-info h3 {
+            color: #1a1a1a;
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+
+        .profile-info p {
+            color: #666666;
+            font-size: 0.9rem;
+        }
+
+        .profile-details {
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .detail-label {
+            color: #666666;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            color: #1a1a1a;
+            text-align: right;
+        }
+
+        .profile-bio {
+            color: #1a1a1a;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .profile-skills {
+            margin-bottom: 20px;
+        }
+
+        .skills-label {
+            color: #666666;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skill-tag {
+            background: #f0f0f0;
+            color: #1a1a1a;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            border: 1px solid #e0e0e0;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .connect-btn {
+            background: linear-gradient(45deg, #dc2626, #b91c1c);
+            color: #1a1a1a;
+        }
+
+        .connect-btn:hover {
+            background: linear-gradient(45deg, #b91c1c, #991b1b);
+            transform: translateY(-2px);
+        }
+
+        .message-btn {
+            background: transparent;
+            color: #1a1a1a;
+            border: 2px solid #1a1a1a;
+        }
+
+        .message-btn:hover {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .back-btn {
+            background: transparent;
+            color: #666666;
+            border: 1px solid #e0e0e0;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            background: #f5f5f5;
+        }
+
+        @media (max-width: 768px) {
+            .search-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .profiles-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container, .header, .search-filters {
+                margin: 0 10px 20px 10px;
+            }
+            
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            
+            .header-actions {
+                justify-content: center;
+            }
+        }
+    </style>
+    <script>
+        function connectWithUser(name) {
+            alert(`Connection request sent to ${name}!`);
+        }
+
+        function messageUser(name) {
+            alert(`Opening message conversation with ${name}...`);
+        }
+
+        function searchProfiles() {
+            alert('Searching profiles...');
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('mobile-open');
+        }
+    </script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="nexus_landing.html" class="nav-logo">Nexus</a>
+            <div class="nav-links">
+                <a href="nexus_posts.html" class="nav-link">Posts</a>
+                <a href="nexus_profiles.html" class="nav-link active">Browse Profiles</a>
+                <a href="nexus_profile.html" class="nav-link">My Profile</a>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+        </div>
+    </nav>
+
+    <div class="header">
+        <div class="header-content">
+            <h1>Browse Profiles</h1>
+            <p>Connect with fellow students and professionals in your field</p>
+        </div>
+        <div class="header-actions">
+            <a href="nexus_posts.html" class="nav-btn">Community Posts</a>
+            <a href="nexus_profile.html" class="nav-btn">My Profile</a>
+        </div>
+    </div>
+
+    <div class="search-filters">
+        <div class="search-row">
+            <div class="search-group">
+                <label for="searchTerm">Search by name, institution, or skills</label>
+                <input type="text" id="searchTerm" placeholder="Enter search terms...">
+            </div>
+            <div class="search-group">
+                <label for="institution">Institution</label>
+                <select id="institution">
+                    <option value="">All Institutions</option>
+                    <option value="stanford">Stanford University</option>
+                    <option value="berkeley">UC Berkeley</option>
+                    <option value="mit">MIT</option>
+                    <option value="harvard">Harvard University</option>
+                </select>
+            </div>
+            <div class="search-group">
+                <label for="field">Field of Study</label>
+                <select id="field">
+                    <option value="">All Fields</option>
+                    <option value="cs">Computer Science</option>
+                    <option value="business">Business</option>
+                    <option value="engineering">Engineering</option>
+                    <option value="finance">Finance</option>
+                </select>
+            </div>
+            <button class="search-btn" onclick="searchProfiles()">Search</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="profiles-grid">
+            <!-- Profile Card 1 -->
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar">JD</div>
+                    <div class="profile-info">
+                        <h3>Jane Doe</h3>
+                        <p>Stanford University</p>
+                    </div>
+                </div>
+                <div class="profile-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Major:</span>
+                        <span class="detail-value">Computer Science</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Graduation:</span>
+                        <span class="detail-value">2024</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Age:</span>
+                        <span class="detail-value">22</span>
+                    </div>
+                </div>
+                <div class="profile-bio">
+                    Passionate about AI and machine learning. Currently working on my senior thesis about natural language processing. Looking to connect with others interested in tech innovation.
+                </div>
+                <div class="profile-skills">
+                    <div class="skills-label">Skills:</div>
+                    <div class="skills-list">
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">Machine Learning</span>
+                        <span class="skill-tag">React</span>
+                        <span class="skill-tag">TensorFlow</span>
+                    </div>
+                </div>
+                <div class="profile-actions">
+                    <button class="action-btn connect-btn" onclick="connectWithUser('Jane Doe')">Connect</button>
+                    <button class="action-btn message-btn" onclick="messageUser('Jane Doe')">Message</button>
+                </div>
+            </div>
+
+            <!-- Profile Card 2 -->
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar">MS</div>
+                    <div class="profile-info">
+                        <h3>Mike Smith</h3>
+                        <p>UC Berkeley</p>
+                    </div>
+                </div>
+                <div class="profile-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Major:</span>
+                        <span class="detail-value">Business Administration</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Graduation:</span>
+                        <span class="detail-value">2025</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Age:</span>
+                        <span class="detail-value">21</span>
+                    </div>
+                </div>
+                <div class="profile-bio">
+                    Finance enthusiast with a focus on investment banking. President of the Finance Club and seeking internship opportunities at top-tier firms.
+                </div>
+                <div class="profile-skills">
+                    <div class="skills-label">Skills:</div>
+                    <div class="skills-list">
+                        <span class="skill-tag">Financial Modeling</span>
+                        <span class="skill-tag">Excel</span>
+                        <span class="skill-tag">Bloomberg Terminal</span>
+                        <span class="skill-tag">Leadership</span>
+                    </div>
+                </div>
+                <div class="profile-actions">
+                    <button class="action-btn connect-btn" onclick="connectWithUser('Mike Smith')">Connect</button>
+                    <button class="action-btn message-btn" onclick="messageUser('Mike Smith')">Message</button>
+                </div>
+            </div>
+
+            <!-- Profile Card 3 -->
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar">AL</div>
+                    <div class="profile-info">
+                        <h3>Anna Lopez</h3>
+                        <p>MIT</p>
+                    </div>
+                </div>
+                <div class="profile-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Major:</span>
+                        <span class="detail-value">Electrical Engineering</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Graduation:</span>
+                        <span class="detail-value">2024</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Age:</span>
+                        <span class="detail-value">23</span>
+                    </div>
+                </div>
+                <div class="profile-bio">
+                    Recently accepted a Software Engineer position at Google. Passionate about hardware-software integration and IoT devices. Happy to mentor underclassmen!
+                </div>
+                <div class="profile-skills">
+                    <div class="skills-label">Skills:</div>
+                    <div class="skills-list">
+                        <span class="skill-tag">C++</span>
+                        <span class="skill-tag">Embedded Systems</span>
+                        <span class="skill-tag">Arduino</span>
+                        <span class="skill-tag">Circuit Design</span>
+                    </div>
+                </div>
+                <div class="profile-actions">
+                    <button class="action-btn connect-btn" onclick="connectWithUser('Anna Lopez')">Connect</button>
+                    <button class="action-btn message-btn" onclick="messageUser('Anna Lopez')">Message</button>
+                </div>
+            </div>
+
+            <!-- Profile Card 4 -->
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar">RT</div>
+                    <div class="profile-info">
+                        <h3>Robert Taylor</h3>
+                        <p>Harvard University</p>
+                    </div>
+                </div>
+                <div class="profile-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Major:</span>
+                        <span class="detail-value">Accounting</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Graduation:</span>
+                        <span class="detail-value">2024</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Age:</span>
+                        <span class="detail-value">22</span>
+                    </div>
+                </div>
+                <div class="profile-bio">
+                    Preparing for CPA certification while completing my degree. Interested in public accounting and tax consulting. Looking for study partners and professional connections.
+                </div>
+                <div class="profile-skills">
+                    <div class="skills-label">Skills:</div>
+                    <div class="skills-list">
+                        <span class="skill-tag">Tax Preparation</span>
+                        <span class="skill-tag">QuickBooks</span>
+                        <span class="skill-tag">Financial Analysis</span>
+                        <span class="skill-tag">Auditing</span>
+                    </div>
+                </div>
+                <div class="profile-actions">
+                    <button class="action-btn connect-btn" onclick="connectWithUser('Robert Taylor')">Connect</button>
+                    <button class="action-btn message-btn" onclick="messageUser('Robert Taylor')">Message</button>
+                </div>
+            </div>
+
+            <!-- Profile Card 5 -->
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar">EP</div>
+                    <div class="profile-info">
+                        <h3>Emily Park</h3>
+                        <p>Stanford University</p>
+                    </div>
+                </div>
+                <div class="profile-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Major:</span>
+                        <span class="detail-value">Marketing</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Graduation:</span>
+                        <span class="detail-value">2025</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Age:</span>
+                        <span class="detail-value">20</span>
+                    </div>
+                </div>
+                <div class="profile-bio">
+                    Digital marketing enthusiast with experience in social media campaigns and content creation. Currently interning at a startup and loving the fast-paced environment.
+                </div>
+                <div class="profile-skills">
+                    <div class="skills-label">Skills:</div>
+                    <div class="skills-list">
+                        <span class="skill-tag">Social Media</span>
+                        <span class="skill-tag">Content Strategy</span>
+                        <span class="skill-tag">Adobe Creative Suite</span>
+                        <span class="skill-tag">Google Analytics</span>
+                    </div>
+                </div>
+                <div class="profile-actions">
+                    <button class="action-btn connect-btn" onclick="connectWithUser('Emily Park')">Connect</button>
+                    <button class="action-btn message-btn" onclick="messageUser('Emily Park')">Message</button>
+                </div>
+            </div>
+
+            <!-- Profile Card 6 -->
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar">DW</div>
+                    <div class="profile-info">
+                        <h3>David Wilson</h3>
+                        <p>UC Berkeley</p>
+                    </div>
+                </div>
+                <div class="profile-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Major:</span>
+                        <span class="detail-value">Mechanical Engineering</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Graduation:</span>
+                        <span class="detail-value">2024</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Age:</span>
+                        <span class="detail-value">23</span>
+                    </div>
+                </div>
+                <div class="profile-bio">
+                    Passionate about sustainable energy and automotive engineering. Working on a senior capstone project involving electric vehicle battery optimization.
+                </div>
+                <div class="profile-skills">
+                    <div class="skills-label">Skills:</div>
+                    <div class="skills-list">
+                        <span class="skill-tag">CAD Design</span>
+                        <span class="skill-tag">MATLAB</span>
+                        <span class="skill-tag">3D Printing</span>
+                        <span class="skill-tag">Project Management</span>
+                    </div>
+                </div>
+                <div class="profile-actions">
+                    <button class="action-btn connect-btn" onclick="connectWithUser('David Wilson')">Connect</button>
+                    <button class="action-btn message-btn" onclick="messageUser('David Wilson')">Message</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

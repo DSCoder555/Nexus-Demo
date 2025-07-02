@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus - About Us</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+            color: #1a1a1a;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 2px solid #e0e0e0;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .back-btn {
+            background: transparent;
+            color: #666666;
+            border: 1px solid #e0e0e0;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 6vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #dc2626, #1a1a1a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -2px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: #666666;
+            font-style: italic;
+            margin-bottom: 30px;
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            color: #1a1a1a;
+            line-height: 1.6;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            font-size: 2rem;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #dc2626;
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .section p {
+            font-size: 1rem;
+            color: #4a4a4a;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #dc2626;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            color: #666666;
+            font-size: 0.95rem;
+        }
+
+        .stats-section {
+            background: linear-gradient(45deg, #dc2626, #b91c1c);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .stat-item h3 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .stat-item p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .cta-section {
+            text-align: center;
+            margin-top: 50px;
+            padding: 40px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .cta-section h2 {
+            font-size: 2rem;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            border: none;
+            display: block;
+        }
+
+        .cta-section p {
+            font-size: 1.1rem;
+            color: #666666;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            padding: 15px 35px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #dc2626, #b91c1c);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #1a1a1a;
+            border: 2px solid #1a1a1a;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #b91c1c, #991b1b);
+        }
+
+        .btn-secondary:hover {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .btn {
+                display: block;
+                margin: 10px 0;
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="welcome_screen.html" class="back-btn">← Back to Home</a>
+        
+        <div class="hero-section">
+            <h1 class="hero-title">Nexus</h1>
+            <p class="hero-subtitle">Discover Differently</p>
+            <p class="hero-description">
+                Nexus is revolutionizing how students and young professionals connect, share opportunities, and build meaningful career relationships. We believe that the best opportunities come through authentic connections and shared experiences.
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>Our Mission</h2>
+            <p>
+                At Nexus, we're dedicated to breaking down barriers in professional networking. Traditional networking can feel intimidating, exclusive, or superficial. We've created a platform where genuine connections flourish, where students can learn from each other, and where career opportunities are discovered through community rather than competition.
+            </p>
+            <p>
+                Our mission is to democratize access to career opportunities by fostering authentic relationships between students, recent graduates, and young professionals across all industries and institutions.
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>What Makes Us Different</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">🎓</span>
+                    <h3>Student-Focused</h3>
+                    <p>Built specifically for students and recent graduates, understanding the unique challenges and opportunities of starting a career.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🤝</span>
+                    <h3>Authentic Connections</h3>
+                    <p>Move beyond superficial networking. Share experiences, ask questions, and build genuine relationships with peers in your field.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">💡</span>
+                    <h3>Knowledge Sharing</h3>
+                    <p>Learn from others' experiences, get advice on career decisions, and discover opportunities you might have missed.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🌟</span>
+                    <h3>Opportunity Discovery</h3>
+                    <p>Uncover internships, job openings, and career paths through your expanded network of peers and mentors.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <h2 style="color: white; border-color: white;">Growing Community</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3>15,000+</h3>
+                    <p>Active Students</p>
+                </div>
+                <div class="stat-item">
+                    <h3>500+</h3>
+                    <p>Universities</p>
+                </div>
+                <div class="stat-item">
+                    <h3>2,300+</h3>
+                    <p>Successful Connections</p>
+                </div>
+                <div class="stat-item">
+                    <h3>95%</h3>
+                    <p>User Satisfaction</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Our Story</h2>
+            <p>
+                Nexus was founded by a group of recent graduates who experienced firsthand the challenges of transitioning from university to career. We noticed that while social media connects us socially, there was a gap in platforms designed specifically for meaningful professional connections among students and young professionals.
+            </p>
+            <p>
+                Launched in 2023, Nexus has quickly grown to become the go-to platform for students seeking authentic career connections. Our team combines expertise in technology, education, and career development to create an experience that truly serves our community's needs.
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>Our Values</h2>
+            <p><strong>Authenticity:</strong> We believe in real connections over superficial networking. Every interaction should add genuine value to both parties.</p>
+            <p><strong>Inclusivity:</strong> Career opportunities should be accessible to everyone, regardless of background, institution, or connections.</p>
+            <p><strong>Community:</strong> We're stronger together. Collaboration and mutual support drive both individual and collective success.</p>
+            <p><strong>Growth:</strong> Every connection is an opportunity to learn, grow, and help others on their journey.</p>
+        </div>
+
+        <div class="cta-section">
+            <h2>Ready to Discover Differently?</h2>
+            <p>Join thousands of students and young professionals who are building their careers through authentic connections.</p>
+            <a href="account_creation.html" class="btn btn-primary">Join Nexus Today</a>
+        </div>
+    </div>
+</body>
+</html>
