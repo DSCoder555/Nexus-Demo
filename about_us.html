@@ -19,6 +19,80 @@
             color: #1a1a1a;
         }
 
+        /* Navigation Menu Styles */
+        .nav-menu {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: 2px solid #e0e0e0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            max-width: 300px;
+        }
+
+        .nav-toggle {
+            width: 100%;
+            padding: 12px 20px;
+            background: linear-gradient(45deg, #dc2626, #b91c1c);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-toggle:hover {
+            background: linear-gradient(45deg, #b91c1c, #991b1b);
+        }
+
+        .nav-toggle-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-toggle.active .nav-toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .nav-links {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: white;
+        }
+
+        .nav-links.active {
+            max-height: 400px;
+        }
+
+        .nav-links a {
+            display: block;
+            padding: 12px 20px;
+            color: #1a1a1a;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .nav-links a:hover {
+            background: #f8f9fa;
+            color: #dc2626;
+            padding-left: 30px;
+        }
+
+        .nav-links a:last-child {
+            border-bottom: none;
+        }
+
         .container {
             max-width: 900px;
             margin: 0 auto;
@@ -28,6 +102,8 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             border: 2px solid #e0e0e0;
             animation: fadeInUp 0.8s ease-out;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         @keyframes fadeInUp {
@@ -92,6 +168,7 @@
 
         .section {
             margin-bottom: 40px;
+            scroll-margin-top: 100px;
         }
 
         .section h2 {
@@ -182,6 +259,7 @@
             background: #f8f9fa;
             border-radius: 15px;
             border: 2px solid #e0e0e0;
+            scroll-margin-top: 100px;
         }
 
         .cta-section h2 {
@@ -238,6 +316,12 @@
         }
 
         @media (max-width: 768px) {
+            .nav-menu {
+                position: static;
+                margin-bottom: 20px;
+                max-width: 100%;
+            }
+
             .container {
                 padding: 30px 20px;
                 margin: 10px;
@@ -264,13 +348,34 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Smooth scrolling for the entire page */
+        html {
+            scroll-behavior: smooth;
+        }
     </style>
 </head>
 <body>
+    <!-- Navigation Menu -->
+    <div class="nav-menu">
+        <button class="nav-toggle" onclick="toggleMenu()">
+            <span>Page Navigation</span>
+            <span class="nav-toggle-icon">▼</span>
+        </button>
+        <div class="nav-links" id="navLinks">
+            <a href="#hero">About Nexus</a>
+            <a href="#mission">Our Mission</a>
+            <a href="#different">What Makes Us Different</a>
+            <a href="#story">Our Story</a>
+            <a href="#values">Our Values</a>
+            <a href="#cta">Join Us</a>
+        </div>
+    </div>
+
     <div class="container">
         <a href="index.html" class="back-btn">← Back to Home</a>
         
-        <div class="hero-section">
+        <div class="hero-section" id="hero">
             <h1 class="hero-title">Nexus</h1>
             <p class="hero-subtitle">Discover Differently</p>
             <p class="hero-description">
@@ -278,7 +383,7 @@
             </p>
         </div>
 
-        <div class="section">
+        <div class="section" id="mission">
             <h2>Our Mission</h2>
             <p>
                 At Nexus, we're dedicated to breaking down barriers in professional networking. Traditional networking can feel intimidating, exclusive, or superficial. We've created a platform where genuine connections flourish, where students can learn from each other, and where career opportunities are discovered through community rather than competition.
@@ -288,7 +393,7 @@
             </p>
         </div>
 
-        <div class="section">
+        <div class="section" id="different">
             <h2>What Makes Us Different</h2>
             <div class="features-grid">
                 <div class="feature-card">
@@ -314,7 +419,7 @@
             </div>
         </div>
 
-        <div class="stats-section">
+        <!-- <div class="stats-section">
             <h2 style="color: white; border-color: white;">Growing Community</h2>
             <div class="stats-grid">
                 <div class="stat-item">
@@ -334,19 +439,19 @@
                     <p>User Satisfaction</p>
                 </div>
             </div>
-        </div>
+        </div> -->
 
-        <div class="section">
+        <div class="section" id="story">
             <h2>Our Story</h2>
             <p>
-                Nexus was founded by a group of recent graduates who experienced firsthand the challenges of transitioning from university to career. We noticed that while social media connects us socially, there was a gap in platforms designed specifically for meaningful professional connections among students and young professionals.
+                Nexus was founded by a group of undergraduates who experienced firsthand the challenges of transitioning from university to career. We noticed that while social media connects us socially, there was a gap in platforms designed specifically for meaningful professional connections among students and young professionals.
             </p>
             <p>
-                Launched in 2023, Nexus has quickly grown to become the go-to platform for students seeking authentic career connections. Our team combines expertise in technology, education, and career development to create an experience that truly serves our community's needs.
+                Launched in 2025, Nexus has quickly grown to become the go-to platform for students seeking authentic career connections. Our team combines expertise in technology, education, and career development to create an experience that truly serves our community's needs.
             </p>
         </div>
 
-        <div class="section">
+        <div class="section" id="values">
             <h2>Our Values</h2>
             <p><strong>Authenticity:</strong> We believe in real connections over superficial networking. Every interaction should add genuine value to both parties.</p>
             <p><strong>Inclusivity:</strong> Career opportunities should be accessible to everyone, regardless of background, institution, or connections.</p>
@@ -354,11 +459,44 @@
             <p><strong>Growth:</strong> Every connection is an opportunity to learn, grow, and help others on their journey.</p>
         </div>
 
-        <div class="cta-section">
+        <div class="cta-section" id="cta">
             <h2>Ready to Discover Differently?</h2>
             <p>Join thousands of students and young professionals who are building their careers through authentic connections.</p>
             <a href="account_creation.html" class="btn btn-primary">Join Nexus Today</a>
         </div>
     </div>
+
+    <script>
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            const navToggle = document.querySelector('.nav-toggle');
+            
+            navLinks.classList.toggle('active');
+            navToggle.classList.toggle('active');
+        }
+
+        // Close menu when clicking on a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                const navLinks = document.getElementById('navLinks');
+                const navToggle = document.querySelector('.nav-toggle');
+                
+                navLinks.classList.remove('active');
+                navToggle.classList.remove('active');
+            });
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            const navMenu = document.querySelector('.nav-menu');
+            const navLinks = document.getElementById('navLinks');
+            const navToggle = document.querySelector('.nav-toggle');
+            
+            if (!navMenu.contains(e.target)) {
+                navLinks.classList.remove('active');
+                navToggle.classList.remove('active');
+            }
+        });
+    </script>
 </body>
 </html>
