@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #fafafa;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #1a1a1a;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 2px solid #e0e0e0;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .back-btn {
+            background: transparent;
+            color: #666666;
+            border: 1px solid #e0e0e0;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .form-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+        }
+
+        .form-subtitle {
+            font-size: 1.1rem;
+            color: #666666;
+            margin-bottom: 30px;
+        }
+
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #1a1a1a;
+            font-size: 1rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #ffffff;
+            color: #1a1a1a;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #dc2626;
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 30px;
+        }
+
+        .forgot-password a {
+            color: #dc2626;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            min-width: 150px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #dc2626, #b91c1c);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #1a1a1a;
+            border: 2px solid #1a1a1a;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #b91c1c, #991b1b);
+        }
+
+        .btn-secondary:hover {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            color: #dc2626;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            padding: 10px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .success-message {
+            color: #059669;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .divider {
+            margin: 30px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e0e0e0;
+        }
+
+        .divider span {
+            background: #ffffff;
+            padding: 0 20px;
+            color: #666666;
+            font-size: 0.9rem;
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #666666;
+            font-size: 0.9rem;
+        }
+
+        .signup-link a {
+            color: #dc2626;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+                margin: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px 15px;
+            }
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            transition: transform 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="nexus_landing.html" class="back-btn">← Back to Home</a>
+        <div class="form-container">
+            <h2 class="form-title">Welcome Back</h2>
+            <p class="form-subtitle">Sign in to your Nexus account</p>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                
+                <div class="forgot-password">
+                    <a href="#" onclick="resetPassword()">Forgot Password?</a>
+                </div>
+
+                <div id="errorMessage" class="error-message"></div>
+                <div id="successMessage" class="success-message"></div>
+                
+                <div class="button-container">
+                    <button type="submit" class="btn btn-primary" id="loginBtn">Sign In</button>
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='nexus_landing.html'">Cancel</button>
+                </div>
+            </form>
+
+            <div class="signup-link">
+                Don't have an account? <a href="nexus_signup.html">Sign up here</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // Your web app's Firebase configuration
+        // Replace with your actual Firebase config
+        const firebaseConfig = {
+    apiKey: "AIzaSyDRN2yqv45HZfpVHeCmWXAx_RbvA9Sm1Po",
+    authDomain: "nexus-pitch-b2edc.firebaseapp.com",
+    projectId: "nexus-pitch-b2edc",
+    storageBucket: "nexus-pitch-b2edc.firebasestorage.app",
+    messagingSenderId: "68329371439",
+    appId: "1:68329371439:web:c366437c4b87c20bf893da",
+    measurementId: "G-L5G8R4H0X3"
+  };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Make auth available globally
+        window.auth = auth;
+        window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+        window.sendPasswordResetEmail = sendPasswordResetEmail;
+    </script>
+
+    <script>
+        // Login form submission
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            
+            // Clear previous messages
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+            
+            // Disable button and show loading
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Signing In...';
+            
+            try {
+                // Sign in with Firebase
+                const userCredential = await window.signInWithEmailAndPassword(window.auth, email, password);
+                const user = userCredential.user;
+                
+                // Show success message
+                successMessage.textContent = 'Login successful! Redirecting...';
+                successMessage.style.display = 'block';
+                
+                // Store user info in localStorage (optional)
+                localStorage.setItem('nexusUser', JSON.stringify({
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: user.displayName
+                }));
+                
+                // Redirect to posts page after a brief delay
+                setTimeout(() => {
+                    window.location.href = 'nexus_posts.html';
+                }, 1500);
+                
+            } catch (error) {
+                // Handle different error types
+                let errorText = 'An error occurred. Please try again.';
+                
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                        errorText = 'No account found with this email address.';
+                        break;
+                    case 'auth/wrong-password':
+                        errorText = 'Incorrect password. Please try again.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorText = 'Please enter a valid email address.';
+                        break;
+                    case 'auth/too-many-requests':
+                        errorText = 'Too many failed attempts. Please try again later.';
+                        break;
+                    default:
+                        errorText = error.message;
+                }
+                
+                errorMessage.textContent = errorText;
+                errorMessage.style.display = 'block';
+                
+                // Re-enable button
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Sign In';
+            }
+        });
+
+        // Password reset function
+        async function resetPassword() {
+            const email = document.getElementById('email').value;
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            
+            if (!email) {
+                errorMessage.textContent = 'Please enter your email address first.';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            try {
+                await window.sendPasswordResetEmail(window.auth, email);
+                successMessage.textContent = 'Password reset email sent! Check your inbox.';
+                successMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+            } catch (error) {
+                errorMessage.textContent = 'Error sending reset email. Please try again.';
+                errorMessage.style.display = 'block';
+                successMessage.style.display = 'none';
+            }
+        }
+
+        // Make resetPassword function globally available
+        window.resetPassword = resetPassword;
+    </script>
+</body>
+</html>
