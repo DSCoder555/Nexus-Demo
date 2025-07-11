@@ -191,7 +191,246 @@
             transform: translateY(-5px);
             transition: transform 0.3s ease;
         }
+
+        .error-message {
+            color: #dc2626;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            padding: 10px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .success-message {
+            color: #059669;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 5px;
+            display: none;
+        }
     </style>
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, updateProfile, connectAuthEmulator } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, connectFirestoreEmulator } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // IMPORTANT: Replace these placeholder values with your actual Firebase config
+        // Get these from: Firebase Console → Project Settings → General → Your apps
+        const firebaseConfig = {
+    apiKey: "AIzaSyDRN2yqv45HZfpVHeCmWXAx_RbvA9Sm1Po",
+    authDomain: "nexus-pitch-b2edc.firebaseapp.com",
+    projectId: "nexus-pitch-b2edc",
+    storageBucket: "nexus-pitch-b2edc.firebasestorage.app",
+    messagingSenderId: "68329371439",
+    appId: "1:68329371439:web:c366437c4b87c20bf893da",
+    measurementId: "G-L5G8R4H0X3"
+  };
+
+        // Initialize Firebase
+        let app, auth, db;
+        let firebaseReady = false;
+        
+        try {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            
+            // Configure auth settings to handle reCAPTCHA
+            auth.settings = {
+                appVerificationDisabledForTesting: true // Only for development
+            };
+            
+            firebaseReady = true;
+            console.log("✅ Firebase initialized successfully");
+        } catch (error) {
+            console.error("❌ Firebase initialization error:", error);
+            firebaseReady = false;
+        }
+
+        // Form submission handler
+        async function handleSignup(e) {
+            e.preventDefault();
+            console.log("📝 Form submitted");
+            
+            // Check if Firebase is ready
+            if (!firebaseReady) {
+                console.error("❌ Firebase not initialized");
+                document.getElementById('errorMessage').textContent = 'Firebase not initialized. Please check the configuration.';
+                document.getElementById('errorMessage').style.display = 'block';
+                return;
+            }
+            
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const institution = document.getElementById('institution').value.trim();
+            const age = document.getElementById('age').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            console.log("📋 Form data collected:", { firstName, lastName, email, institution, age });
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            
+            // Clear previous messages
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+            
+            // Validate required fields
+            if (!firstName || !lastName || !email || !institution || !age || !password) {
+                errorMessage.textContent = 'Please fill in all fields.';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            // Validate passwords match
+            if (password !== confirmPassword) {
+                errorMessage.textContent = 'Passwords do not match.';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            // Validate password length
+            if (password.length < 6) {
+                errorMessage.textContent = 'Password must be at least 6 characters long.';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                errorMessage.textContent = 'Please enter a valid email address.';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            // Disable button and show loading
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Creating Account...';
+            
+            try {
+                console.log("🔐 Creating Firebase account...");
+                
+                // Create user with Firebase Auth
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                console.log("✅ User created:", user.uid);
+                
+                // Update user profile with display name
+                await updateProfile(user, {
+                    displayName: `${firstName} ${lastName}`
+                });
+                console.log("✅ Profile updated");
+                
+                // Save additional user data to Firestore (optional - continue even if this fails)
+                try {
+                    const userData = {
+                        firstName: firstName,
+                        lastName: lastName,
+                        email: email,
+                        institution: institution,
+                        age: parseInt(age),
+                        createdAt: new Date(),
+                        uid: user.uid
+                    };
+                    
+                    await setDoc(doc(db, 'users', user.uid), userData);
+                    console.log("✅ User data saved to Firestore");
+                } catch (firestoreError) {
+                    console.warn("⚠️ Firestore save failed, but account was created:", firestoreError);
+                    // Continue anyway - the main account was created successfully
+                }
+                
+                // Store user info in localStorage
+                localStorage.setItem('nexusUser', JSON.stringify({
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: user.displayName,
+                    firstName: firstName,
+                    lastName: lastName,
+                    institution: institution,
+                    age: age
+                }));
+                console.log("✅ User data stored locally");
+                
+                // Re-enable button and show success
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Account Created!';
+                submitBtn.style.background = '#059669';
+                
+                // Show success message
+                successMessage.textContent = 'Account created successfully! Redirecting to posts...';
+                successMessage.style.display = 'block';
+                console.log("✅ Success message shown");
+                
+                // Redirect to posts page after a brief delay
+                console.log("🔄 Redirecting in 2 seconds...");
+                setTimeout(() => {
+                    console.log("🔄 Redirecting now...");
+                    window.location.href = 'nexus_posts.html';
+                }, 2000);
+                
+            } catch (error) {
+                console.error("❌ Firebase error:", error);
+                
+                // Handle different error types
+                let errorText = 'An error occurred. Please try again.';
+                
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        errorText = 'An account with this email already exists.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorText = 'Please enter a valid email address.';
+                        break;
+                    case 'auth/weak-password':
+                        errorText = 'Password is too weak. Please choose a stronger password.';
+                        break;
+                    case 'auth/network-request-failed':
+                        errorText = 'Network error. Please check your connection and try again.';
+                        break;
+                    case 'auth/operation-not-allowed':
+                        errorText = 'Email/password sign-up is not enabled. Please enable it in Firebase Console.';
+                        break;
+                    case 'auth/too-many-requests':
+                        errorText = 'Too many requests. Please try again later.';
+                        break;
+                    default:
+                        errorText = `Error: ${error.message}`;
+                }
+                
+                errorMessage.textContent = errorText;
+                errorMessage.style.display = 'block';
+                
+                // Re-enable button
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Create Account';
+            }
+        }
+
+        // Wait for DOM to be ready, then attach event listener
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("🌐 DOM loaded");
+            const form = document.getElementById('signupForm');
+            if (form) {
+                form.addEventListener('submit', handleSignup);
+                console.log("📝 Form event listener attached");
+            } else {
+                console.error("❌ Signup form not found");
+            }
+        });
+    </script>
 </head>
 <body>
     <div class="container">
@@ -200,7 +439,7 @@
             <h2 class="form-title">Create Account</h2>
             <p class="form-subtitle">Join Nexus and discover new career opportunities</p>
             
-            <form>
+            <form id="signupForm">
                 <div class="form-group">
                     <label for="firstName">First Name</label>
                     <input type="text" id="firstName" name="firstName" required>
@@ -235,12 +474,19 @@
                     <label for="confirmPassword">Confirm Password</label>
                     <input type="password" id="confirmPassword" name="confirmPassword" required>
                 </div>
+
+                <div id="errorMessage" class="error-message"></div>
+                <div id="successMessage" class="success-message"></div>
                 
                 <div class="button-container">
-                    <button type="submit" class="btn btn-primary" onclick="window.location.href='nexus_posts.html'">Create Account</button>
-                    <button type="button" class="btn btn-secondary" onclick="window.location.href='nexus_landing.html'">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">Create Account</button>
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='index.html'">Cancel</button>
                 </div>
             </form>
+            
+            <div style="text-align: center; margin-top: 30px; color: #666666; font-size: 0.9rem;">
+                Already have an account? <a href="nexus_login.html" style="color: #dc2626; text-decoration: none; font-weight: 600;">Sign in here</a>
+            </div>
         </div>
     </div>
 </body>
